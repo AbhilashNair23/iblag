@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { SendMessageDto } from './model/send-message-dto.interface';
 
@@ -13,6 +13,7 @@ export class AppController {
 
   @Post('send')
   async sendMessage(@Body() data: SendMessageDto): Promise<any> {
+    Logger.log('Request from triggering message!!');
     return await this.appService.sendMessage(data);
   }
 }

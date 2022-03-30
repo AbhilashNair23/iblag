@@ -1,4 +1,4 @@
-import { HttpCode, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpCode, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { channel } from './model/common.enum';
 import { SendMessageDto } from './model/send-message-dto.interface';
@@ -36,14 +36,19 @@ export class AppService {
     return response;
   }
 
-  async triggerVoiceCall(data: SendMessageDto): Promise<any> {
+  async triggerVoiceCall(request: SendMessageDto): Promise<any> {
     let response;
     try {
-      response = await this.client.calls.create({
+      const responseData = await this.client.calls.create({
         url: process.env.URL,
-        to: data.toNumber,
+        to: request.toNumber,
         from: process.env.TWILIO_NUMBER
       });
+      Logger.log('voice call triggered!!');
+      response = {
+        status: HttpStatus.OK,
+        data: responseData,
+      };
     } catch (e) {
       response = {
         status: HttpStatus.EXPECTATION_FAILED,
@@ -53,14 +58,19 @@ export class AppService {
     return response;
   }
 
-  async triggerSMS(data: SendMessageDto): Promise<any> {
+  async triggerSMS(request: SendMessageDto): Promise<any> {
     let response;
     try {
-      response = await this.client.messages.create({
-        to: data.toNumber,
+      const responseData = await this.client.messages.create({
+        to: request.toNumber,
         messagingServiceSid: process.env.MESSAGING_SERVICE_SID,
-        body: data.message,
+        body: request.message,
       });
+      Logger.log('sms triggered!!');
+      response = {
+        status: HttpStatus.OK,
+        data: responseData,
+      };
     } catch (e) {
       response = {
         status: HttpStatus.EXPECTATION_FAILED,
@@ -70,14 +80,19 @@ export class AppService {
     return response;
   }
 
-  async triggerWhatsappMessage(data: SendMessageDto): Promise<any> {
+  async triggerWhatsappMessage(request: SendMessageDto): Promise<any> {
     let response;
     try {
-      response = await this.client.messages.create({
-        to: 'whatsapp:' + data.toNumber,
+      const responseData = await this.client.messages.create({
+        to: 'whatsapp:' + request.toNumber,
         from: 'whatsapp:' + process.env.FROM_NUMBER,
-        body: data.message,
+        body: request.message,
       });
+      Logger.log('Whatsapp message triggered!!');
+      response = {
+        status: HttpStatus.OK,
+        data: responseData,
+      };
     } catch (e) {
       response = {
         status: HttpStatus.EXPECTATION_FAILED,
