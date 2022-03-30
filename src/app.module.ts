@@ -10,8 +10,8 @@ import { TwilioModule } from 'nestjs-twilio';
       envFilePath: ['.env.dev'],
     }),
     TwilioModule.forRoot({
-      accountSid: process.env.accountSid,
-      authToken: process.env.authToken,
+      accountSid: process.env.ACCOUNT_SID,
+      authToken: process.env.AUTH_TOKEN,
     }),
   ],
   controllers: [AppController],
