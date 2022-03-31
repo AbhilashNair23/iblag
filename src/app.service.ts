@@ -3,6 +3,7 @@ import { InjectTwilio, TwilioClient } from 'nestjs-twilio';
 import { channel } from './model/common.enum';
 import { SendMessageDto } from './model/send-message-dto.interface';
 
+
 @Injectable()
 export class AppService {
   public constructor(@InjectTwilio() private readonly client: TwilioClient) { }
@@ -21,10 +22,6 @@ export class AppService {
 
         case channel.voiceCall:
           response = await this.triggerVoiceCall(data);
-          break;
-
-        default:
-          response = await this.triggerWhatsappMessage(data);
           break;
       }
     } catch (e) {
